@@ -8,6 +8,7 @@ import BaseInput from "@/components/form/BaseInput.vue";
 import BaseButton from "@/components/form/BaseButton.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
 import TextArea from "@/components/form/TextArea.vue";
+import TheHeader from "@/components/layout/TheHeader.vue";
 
 const productStore = useProductStore();
 const router = useRouter();
@@ -35,6 +36,7 @@ const processing = computed(() => {
 </script>
 
 <template>
+  <TheHeader />
   <div class="main">
     <BaseForm @submit="addProduct">
       <fieldset>
