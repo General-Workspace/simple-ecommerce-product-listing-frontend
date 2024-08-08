@@ -21,8 +21,13 @@ export const useProductStore = defineStore("product", () => {
   const fetchProducts = async () => {
     loading.value = true;
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/products`);
+      const response = await axios.get(`${backendUrl}/api/v1/products/all-products`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       products.value = response.data.data;
+      // products.value.push(...response.data.data);
     } catch (error: any) {
       console.error(error);
       error.value = error.response.data.message;

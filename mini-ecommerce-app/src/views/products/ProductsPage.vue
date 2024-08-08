@@ -1,5 +1,85 @@
-<script setup></script>
+<script setup>
+import { onMounted, computed } from "vue";
+import { useProductStore } from "@/stores/productStore";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "vue-router";
+
+import TheHeader from "@/components/layout/TheHeader.vue";
+
+const productStore = useProductStore();
+const authStore = useAuthStore();
+const router = useRouter();
+
+const products = computed(() => productStore.products);
+
+onMounted(() => {
+  authStore.loadTokenFromStorage();
+
+  if (!authStore.isLoggedIn) {
+    router.push({ name: "login" });
+  }
+
+  productStore.fetchProducts();
+});
+</script>
 
 <template>
-  <h1>Products</h1>
+  <TheHeader />
+  <div class="main">
+    <div class="products">
+      <div v-for="product in products" :key="product.id" class="product">
+        <img :src="product.imageURL" alt="product.name" />
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <p>Price: ${{ product.price }}</p>
+        </div>
+        <p>{{ product.description }}</p>
+      </div>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: "Roboto Serif", serif;
+}
+
+.products {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.product {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.product img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-bottom: 0.31rem;
+}
+</style>
