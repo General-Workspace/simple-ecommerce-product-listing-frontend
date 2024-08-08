@@ -14,6 +14,10 @@ export default {
       type: String,
       required: true,
     },
+    multiple: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -26,7 +30,13 @@ export default {
       >
     </div>
     <slot name="input">
-      <input type="file" :id="id" :name="name" @input="$emit('update:modelValue', $event.target.files[0])" />
+      <input
+        type="file"
+        :id="id"
+        :name="name"
+        :multiple="multiple"
+        @input="$emit('update:modelValue', $event.target.files[0])"
+      />
     </slot>
   </div>
 </template>
@@ -39,6 +49,16 @@ export default {
 .form_control {
   width: 100%;
   height: 3rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input {
+  width: 100%;
+  height: 3rem;
+  background-color: transparent;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;

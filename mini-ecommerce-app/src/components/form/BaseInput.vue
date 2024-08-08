@@ -16,7 +16,7 @@ defineProps({
     type: String,
     required: true,
     default: "text",
-    validator: (value) => ["text", "password", "email"].includes(value),
+    validator: (value) => ["text", "password", "email", "number"].includes(value),
   },
   placeholder: {
     type: String,

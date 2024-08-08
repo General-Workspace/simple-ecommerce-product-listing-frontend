@@ -21,8 +21,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isLoggedIn = computed(() => !!token.value);
 
-// const backendUrl = import.meta.env.VITE_BACKEND_URL;
-const backendUrl = process.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = process.env.VITE_BACKEND_URL;
 
   const signup = async (payload: IUser) => {
     loading.value = true;

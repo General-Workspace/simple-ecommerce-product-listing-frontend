@@ -15,8 +15,8 @@ export const useProductStore = defineStore("product", () => {
   const error = ref<string | null>(null);
   const statusCode = ref<number | null>(null);
 
-  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const backendUrl = process.env.VITE_BACKEND_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = process.env.VITE_BACKEND_URL;
 
   const fetchProducts = async () => {
     loading.value = true;
@@ -33,10 +33,16 @@ export const useProductStore = defineStore("product", () => {
 
   const addProduct = async (payload: IProduct) => {
     loading.value = true;
+
+    const formData = new FormData();
+    formData.append("name", payload.name);
+    formData.append("price", payload.price);
+    formData.append("description", payload.description);
+    formData.append("image", payload.imageURL);
     try {
       const response = await axios.post(`${backendUrl}/api/v1/products/add-product`, payload, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
