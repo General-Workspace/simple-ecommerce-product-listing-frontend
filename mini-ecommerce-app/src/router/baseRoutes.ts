@@ -13,7 +13,7 @@ const baseRoutes = [
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
-    component: () => import("@/views/base/NotFound.vue"),
+    component: () => import("../views/base/NotFound.vue"),
     meta: {
       title: "Not Found",
       requiresAuth: false,
