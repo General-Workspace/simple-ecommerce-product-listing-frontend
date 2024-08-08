@@ -55,6 +55,7 @@ const processing = computed(() => {
           />
         </div>
         <BaseButton type="submit" :label="processing" :disabled="authStore.loading"></BaseButton>
+        <router-link to="/login">Already have an account? Login</router-link>
       </fieldset>
     </BaseForm>
   </div>
@@ -87,5 +88,10 @@ legend {
 
 .input_group {
   margin-bottom: 1rem;
+}
+
+a {
+  color: #333;
+  text-decoration: none;
 }
 </style>

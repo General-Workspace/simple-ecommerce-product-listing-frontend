@@ -49,6 +49,7 @@ const processing = computed(() => {
           />
         </div>
         <BaseButton type="submit" :label="processing" :disabled="authStore.loading"></BaseButton>
+        <router-link :to="{ name: 'signup' }">Don't have an account? Sign Up</router-link>
       </fieldset>
     </BaseForm>
   </div>
