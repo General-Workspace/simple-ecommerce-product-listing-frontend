@@ -15,7 +15,7 @@ export const useProductStore = defineStore("product", () => {
   const error = ref<string | null>(null);
   const statusCode = ref<number | null>(null);
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
   // const backendUrl = process.env.VITE_BACKEND_URL;
 
   const fetchProducts = async () => {
