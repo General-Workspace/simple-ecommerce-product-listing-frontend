@@ -21,8 +21,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isLoggedIn = computed(() => !!token.value);
 
-  // const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const signup = async (payload: IUser) => {
     loading.value = true;
