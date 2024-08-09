@@ -11,12 +11,13 @@ interface IProduct {
 
 export const useProductStore = defineStore("product", () => {
   const products = ref<IProduct[]>([]);
+  const product = ref<IProduct | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
   const statusCode = ref<number | null>(null);
 
   const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
-  // const backendUrl = process.env.VITE_BACKEND_URL;
+  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchProducts = async () => {
     loading.value = true;
@@ -61,12 +62,31 @@ export const useProductStore = defineStore("product", () => {
     }
   };
 
+  const fetchProduct = async (id: string) => {
+    loading.value = true;
+
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      product.value = response.data.data;
+      statusCode.value = response.status;
+    } catch (error: any) {
+      console.error(error);
+      error.value = error.response.data.message;
+    }
+  };
+
   return {
     products,
+    product,
     loading,
     error,
     statusCode,
     fetchProducts,
     addProduct,
+    fetchProduct,
   };
 });

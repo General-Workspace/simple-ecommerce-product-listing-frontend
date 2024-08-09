@@ -33,7 +33,11 @@ onMounted(() => {
           <h3>{{ product.name }}</h3>
           <p>Price: ${{ product.price }}</p>
         </div>
-        <p>{{ product.description }}</p>
+
+        <p class="desc">
+          {{ product.description.length > 100 ? product.description.substring(0, 100) + "..." : product.description }}
+        </p>
+        <router-link :to="{ name: 'product', params: { id: product._id } }">Read More</router-link>
       </div>
     </div>
   </div>
@@ -68,6 +72,7 @@ onMounted(() => {
 }
 
 .product-info {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -81,5 +86,28 @@ onMounted(() => {
   text-decoration: none;
   border-radius: 5px;
   margin-bottom: 0.31rem;
+}
+
+a {
+  text-decoration: none;
+  color: #e2d8d8;
+  background-color: rgb(3, 3, 88);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: rgb(3, 3, 188);
+    transition: all 0.6s;
+  }
+}
+
+.desc {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #f8e9e9;
+  line-height: 1.5;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
 }
 </style>
