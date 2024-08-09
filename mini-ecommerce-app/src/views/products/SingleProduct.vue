@@ -20,6 +20,16 @@ const createdBy = computed(() => {
   return null;
 });
 
+const deleteProduct = async () => {
+  await productStore.deleteProduct(router.currentRoute.value.params.id);
+
+  if (productStore.statusCode === 200) {
+    router.push({ name: "products" });
+  } else {
+    router.push({ name: "product", params: { id: router.currentRoute.value.params.id } });
+  }
+};
+
 productStore.fetchProduct(router.currentRoute.value.params.id);
 
 // const createdBy = computed(() => {
@@ -51,7 +61,7 @@ productStore.fetchProduct(router.currentRoute.value.params.id);
         <p>Price: ${{ product.price }}</p>
       </div>
 
-      <p>{{ product.description }}</p>
+      <p className="border-t-2 pt-2">{{ product.description }}</p>
     </div>
 
     <div class="btns" v-if="createdBy === authStore.user.id">
@@ -71,6 +81,7 @@ productStore.fetchProduct(router.currentRoute.value.params.id);
 }
 
 .product {
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;

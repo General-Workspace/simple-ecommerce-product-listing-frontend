@@ -16,8 +16,8 @@ export const useProductStore = defineStore("product", () => {
   const error = ref<string | null>(null);
   const statusCode = ref<number | null>(null);
 
-  const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
-  // const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchProducts = async () => {
     loading.value = true;
@@ -79,6 +79,42 @@ export const useProductStore = defineStore("product", () => {
     }
   };
 
+  const deleteProduct = async (id: string) => {
+    loading.value = true;
+
+    try {
+      const response = await axios.delete(`${backendUrl}/api/v1/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      statusCode.value = response.status;
+    } catch (error: any) {
+      console.error(error);
+      error.value = error.response.data.message;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const updateProduct = async (id: string, payload: IProduct) => {
+    loading.value = true;
+
+    try {
+      const response = await axios.put(`${backendUrl}/api/v1/products/${id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      statusCode.value = response.status;
+    } catch (error: any) {
+      console.error(error);
+      error.value = error.response.data.message;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     products,
     product,
@@ -88,5 +124,7 @@ export const useProductStore = defineStore("product", () => {
     fetchProducts,
     addProduct,
     fetchProduct,
+    deleteProduct,
+    updateProduct,
   };
 });
