@@ -5,11 +5,11 @@ import { useProductStore } from "@/stores/productStore";
 import { useRouter } from "vue-router";
 
 import TheHeader from "@/components/layout/TheHeader.vue";
-import BaseForm from "../../components/form/BaseForm.vue";
-import BaseInput from "../../components/form/BaseInput.vue";
-import TextArea from "../../components/form/TextArea.vue";
-import ImageInput from "../../components/form/ImageInput.vue";
-import BaseButton from "../../components/form/BaseButton.vue";
+import BaseForm from "@/components/form/BaseForm.vue";
+import BaseInput from "@/components/form/BaseInput.vue";
+import TextArea from "@/components/form/TextArea.vue";
+import ImageInput from "@/components/form/ImageInput.vue";
+import BaseButton from "@/components/form/BaseButton.vue";
 
 const productStore = useProductStore();
 //const authStore = useAuthStore();
