@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
 
 import BaseForm from "@/components/form/BaseForm.vue";
@@ -9,8 +10,10 @@ import BaseButton from "@/components/form/BaseButton.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
 import TextArea from "@/components/form/TextArea.vue";
 import TheHeader from "@/components/layout/TheHeader.vue";
+import ErrorMessage from "@/components/messages/ErrorMessage.vue";
 
 const productStore = useProductStore();
+const authStore = useAuthStore();
 const router = useRouter();
 
 const formData = ref({
@@ -21,6 +24,7 @@ const formData = ref({
 });
 
 const addProduct = async () => {
+  //console.log(formData.value);
   await productStore.addProduct(formData.value);
 
   if (productStore.statusCode === 201) {
@@ -33,12 +37,21 @@ const addProduct = async () => {
 const processing = computed(() => {
   return productStore.loading ? "Processing..." : "Add Product";
 });
+
+onMounted(() => {
+  authStore.loadTokenFromStorage();
+
+  if (!authStore.isLoggedIn) {
+    router.push({ name: "login" });
+  }
+});
 </script>
 
 <template>
   <TheHeader />
   <div class="main">
     <BaseForm @submit="addProduct">
+      <ErrorMessage v-if="productStore.errorMessage !== null" :message="productStore.errorMessage" />
       <fieldset>
         <legend>Add Product</legend>
 
@@ -56,6 +69,7 @@ const processing = computed(() => {
           <BaseInput
             id="name"
             label="Product Name"
+            name="name"
             type="text"
             placeholder="Enter name of Product"
             v-model="formData.name"
@@ -66,6 +80,7 @@ const processing = computed(() => {
           <BaseInput
             id="price"
             label="Price"
+            name="price"
             type="number"
             placeholder="Enter price of product"
             v-model="formData.price"

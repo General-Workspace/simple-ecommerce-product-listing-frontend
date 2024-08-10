@@ -6,6 +6,7 @@ import { useAuthStore } from "@/stores/authStore";
 import BaseForm from "@/components/form/BaseForm.vue";
 import BaseInput from "@/components/form/BaseInput.vue";
 import BaseButton from "@/components/form/BaseButton.vue";
+import ErrorMessage from "@/components/messages/ErrorMessage.vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -18,8 +19,17 @@ const data = ref({
 
 const handleSignup = async () => {
   await authStore.signup(data.value);
-  router.push({ name: "login" });
+
+  if (authStore.statusCode === 201) {
+    router.push({ name: "login" });
+  } else {
+    router.push({ name: "signup" });
+  }
 };
+
+const dataInput = computed(() => {
+  return data.value.email === "" || data.value.password === "" || data.value.username === "";
+});
 
 const processing = computed(() => {
   return authStore.loading ? "Processing..." : "Sign Up";
@@ -29,16 +39,25 @@ const processing = computed(() => {
 <template>
   <div class="main">
     <BaseForm @submit="handleSignup">
+      <ErrorMessage v-if="authStore.errorMessage !== null" :message="authStore.errorMessage" />
       <fieldset>
         <legend>Sign Up</legend>
         <div class="input_group">
-          <BaseInput id="email" label="Email" type="email" placeholder="Enter your email" v-model="data.email" />
+          <BaseInput
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            v-model="data.email"
+          />
         </div>
 
         <div class="input_group">
           <BaseInput
             id="password"
             label="Password"
+            name="password"
             type="password"
             placeholder="Enter your password"
             v-model="data.password"
@@ -49,13 +68,16 @@ const processing = computed(() => {
           <BaseInput
             id="username"
             label="Username"
+            name="username"
             type="text"
             placeholder="Enter your username"
             v-model="data.username"
           />
         </div>
-        <BaseButton type="submit" :label="processing" :disabled="authStore.loading"></BaseButton>
-        <router-link to="/login">Already have an account? Login</router-link>
+        <BaseButton type="submit" :label="processing" :disabled="authStore.loading || dataInput"></BaseButton>
+        <span class="ml-2"
+          >Already have an account? <router-link class="text-green-500" to="/login">Login</router-link></span
+        >
       </fieldset>
     </BaseForm>
   </div>
@@ -88,10 +110,5 @@ legend {
 
 .input_group {
   margin-bottom: 1rem;
-}
-
-a {
-  color: #333;
-  text-decoration: none;
 }
 </style>

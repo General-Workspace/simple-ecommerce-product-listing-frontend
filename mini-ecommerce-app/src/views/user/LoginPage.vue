@@ -6,6 +6,7 @@ import { useRouter } from "vue-router";
 import BaseForm from "@/components/form/BaseForm.vue";
 import BaseInput from "@/components/form/BaseInput.vue";
 import BaseButton from "@/components/form/BaseButton.vue";
+import ErrorMessage from "@/components/messages/ErrorMessage.vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -25,6 +26,10 @@ const handleLogin = async () => {
   }
 };
 
+const dataInput = computed(() => {
+  return data.value.email === "" || data.value.password === "";
+});
+
 const processing = computed(() => {
   return authStore.loading ? "Processing..." : "Login";
 });
@@ -33,23 +38,32 @@ const processing = computed(() => {
 <template>
   <div class="main">
     <BaseForm @submit="handleLogin">
+      <ErrorMessage v-if="authStore.errorMessage !== null" :message="authStore.errorMessage" />
       <fieldset>
         <legend>Login</legend>
         <div class="input_group">
-          <BaseInput id="email" label="Email" type="email" placeholder="Enter your email" v-model="data.email" />
+          <BaseInput
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            v-model="data.email"
+          />
         </div>
 
         <div class="input_group">
           <BaseInput
             id="password"
             label="Password"
+            name="password"
             type="password"
             placeholder="Enter your password"
             v-model="data.password"
           />
         </div>
-        <BaseButton type="submit" :label="processing" :disabled="authStore.loading"></BaseButton>
-        <router-link :to="{ name: 'signup' }">Don't have an account? Sign Up</router-link>
+        <BaseButton type="submit" :label="processing" :disabled="authStore.loading || dataInput"></BaseButton>
+        <span>Don't have an account? <router-link :to="{ name: 'signup' }"> Sign Up</router-link></span>
       </fieldset>
     </BaseForm>
   </div>
@@ -82,5 +96,19 @@ legend {
 
 .input_group {
   margin-bottom: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+span {
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
 }
 </style>

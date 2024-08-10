@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
@@ -32,30 +32,24 @@ const deleteProduct = async () => {
 
 productStore.fetchProduct(router.currentRoute.value.params.id);
 
-// const createdBy = computed(() => {
-//   if (product.value) {
-//     return product.value.createdBy;
-//   }
+productStore.loadProductFromStorage();
 
-//   return null;
-// });
+onMounted(() => {
+  authStore.loadTokenFromStorage();
 
-// onMounted(() => {
-//   authStore.loadTokenFromStorage();
+  if (!authStore.isLoggedIn) {
+    router.push({ name: "login" });
+  }
 
-//   if (!authStore.isLoggedIn) {
-//     router.push({ name: "login" });
-//   }
-
-//   productStore.fetchProduct(router.currentRoute.value.params.id);
-// });
+  productStore.loadProductFromStorage();
+});
 </script>
 
 <template>
   <TheHeader />
   <div class="main">
     <div class="product">
-      <img :src="product.imageURL" alt="product.name" />
+      <img :src="product.imageURL" :alt="product.name" />
       <div class="product-info">
         <h3>{{ product.name }}</h3>
         <p>Price: ${{ product.price }}</p>

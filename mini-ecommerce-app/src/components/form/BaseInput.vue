@@ -12,6 +12,11 @@ defineProps({
     required: true,
     validator: (value) => value.length > 0,
   },
+  name: {
+    type: String,
+    required: true,
+    validator: (value) => value.length > 0,
+  },
   type: {
     type: String,
     required: true,
@@ -44,6 +49,7 @@ const isPasswordVisible = ref(false);
       <input
         :id="id"
         :type="type === 'password' && isPasswordVisible ? 'text' : type"
+        :name="name"
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"

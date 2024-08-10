@@ -17,7 +17,8 @@ export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(null);
   const user = ref<any>(null);
   const loading = ref(false);
-  const error = ref<string | null>(null);
+  const errorMessage = ref<string | null>(null);
+  const statusCode = ref<number | null>(null);
 
   const isLoggedIn = computed(() => !!token.value);
 
@@ -30,9 +31,14 @@ export const useAuthStore = defineStore("auth", () => {
       const response = await axios.post(`${backendUrl}/api/v1/auth/signup`, payload);
       token.value = response.data.token;
       user.value = response.data.user;
+
+      statusCode.value = response.status;
     } catch (error: any) {
-      console.error(error);
-      error.value = error.response.data.message;
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
     } finally {
       loading.value = false;
     }
@@ -53,8 +59,11 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.setItem("user", JSON.stringify(data));
       }
     } catch (error: any) {
-      console.error(error);
-      error.value = error.response.data.message;
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
     } finally {
       loading.value = false;
     }
@@ -81,8 +90,9 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     user,
     loading,
-    error,
+    errorMessage,
     isLoggedIn,
+    statusCode,
     signup,
     login,
     logout,

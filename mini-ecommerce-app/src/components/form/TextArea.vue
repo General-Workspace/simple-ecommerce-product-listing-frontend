@@ -44,6 +44,7 @@ defineEmits(["update:modelValue"]);
         :name="name"
         :rows="4"
         :cols="50"
+        :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
       ></textarea>
     </slot>

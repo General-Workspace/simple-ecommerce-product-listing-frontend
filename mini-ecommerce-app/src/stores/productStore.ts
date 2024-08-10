@@ -6,14 +6,14 @@ interface IProduct {
   name: string;
   price: string;
   description: string;
-  imageURL: string;
+  imageURL: File;
 }
 
 export const useProductStore = defineStore("product", () => {
   const products = ref<IProduct[]>([]);
   const product = ref<IProduct | null>(null);
   const loading = ref(false);
-  const error = ref<string | null>(null);
+  const errorMessage = ref<string | null>(null);
   const statusCode = ref<number | null>(null);
 
   const backendUrl = "https://mini-ecommerce-backend-2ce911e6e6e7.herokuapp.com";
@@ -28,10 +28,8 @@ export const useProductStore = defineStore("product", () => {
         },
       });
       products.value = response.data.data;
-      // products.value.push(...response.data.data);
     } catch (error: any) {
-      console.error(error);
-      error.value = error.response.data.message;
+      errorMessage.value = error.response.data.message;
     } finally {
       loading.value = false;
     }
@@ -44,9 +42,10 @@ export const useProductStore = defineStore("product", () => {
     formData.append("name", payload.name);
     formData.append("price", payload.price);
     formData.append("description", payload.description);
-    formData.append("image", payload.imageURL);
+    formData.append("imageURL", payload.imageURL);
+
     try {
-      const response = await axios.post(`${backendUrl}/api/v1/products/add-product`, payload, {
+      const response = await axios.post(`${backendUrl}/api/v1/products/add-product`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -56,7 +55,11 @@ export const useProductStore = defineStore("product", () => {
       statusCode.value = response.status;
     } catch (error: any) {
       console.error(error);
-      error.value = error.response.data.message;
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
     } finally {
       loading.value = false;
     }
@@ -71,11 +74,21 @@ export const useProductStore = defineStore("product", () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      product.value = response.data.data;
+
       statusCode.value = response.status;
+
+      const { data } = response.data;
+      if (data) {
+        localStorage.setItem("product", JSON.stringify(data));
+      }
     } catch (error: any) {
-      console.error(error);
-      error.value = error.response.data.message;
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -90,8 +103,11 @@ export const useProductStore = defineStore("product", () => {
       });
       statusCode.value = response.status;
     } catch (error: any) {
-      console.error(error);
-      error.value = error.response.data.message;
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
     } finally {
       loading.value = false;
     }
@@ -100,18 +116,41 @@ export const useProductStore = defineStore("product", () => {
   const updateProduct = async (id: string, payload: IProduct) => {
     loading.value = true;
 
+    const formData = new FormData();
+    formData.append("name", payload.name);
+    formData.append("price", payload.price);
+    formData.append("description", payload.description);
+    formData.append("imageURL", payload.imageURL);
+
     try {
-      const response = await axios.put(`${backendUrl}/api/v1/products/${id}`, payload, {
+      const response = await axios.put(`${backendUrl}/api/v1/products/${id}`, formData, {
         headers: {
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       statusCode.value = response.status;
+
+      const { data } = response.data;
+      if (data) {
+        localStorage.setItem("product", JSON.stringify(data));
+      }
     } catch (error: any) {
-      console.error(error);
-      error.value = error.response.data.message;
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
     } finally {
       loading.value = false;
+    }
+  };
+
+  const loadProductFromStorage = () => {
+    const productFromStorage = localStorage.getItem("product");
+
+    if (productFromStorage) {
+      product.value = JSON.parse(productFromStorage);
     }
   };
 
@@ -119,12 +158,13 @@ export const useProductStore = defineStore("product", () => {
     products,
     product,
     loading,
-    error,
+    errorMessage,
     statusCode,
     fetchProducts,
     addProduct,
     fetchProduct,
     deleteProduct,
     updateProduct,
+    loadProductFromStorage,
   };
 });

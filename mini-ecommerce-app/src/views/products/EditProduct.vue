@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
-//import { useAuthStore } from "../../stores/authStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
 
 import TheHeader from "@/components/layout/TheHeader.vue";
@@ -12,8 +12,10 @@ import ImageInput from "@/components/form/ImageInput.vue";
 import BaseButton from "@/components/form/BaseButton.vue";
 
 const productStore = useProductStore();
-//const authStore = useAuthStore();
+const authStore = useAuthStore();
 const router = useRouter();
+
+productStore.loadProductFromStorage();
 
 const product = computed(() => productStore.product);
 
@@ -21,7 +23,7 @@ const formData = ref({
   name: product.value.name,
   price: product.value.price.toString(),
   description: product.value.description,
-  imageURL: null,
+  imageURL: product.value.imageURL,
 });
 
 const editProduct = async () => {
@@ -39,7 +41,11 @@ const processing = computed(() => {
 });
 
 onMounted(() => {
-  productStore.loading = false;
+  authStore.loadTokenFromStorage();
+
+  if (!authStore.isLoggedIn) {
+    router.push({ name: "login" });
+  }
 });
 </script>
 
@@ -64,6 +70,7 @@ onMounted(() => {
           <BaseInput
             id="name"
             label="Product Name"
+            name="name"
             type="text"
             placeholder="Enter name of Product"
             v-model="formData.name"
@@ -74,6 +81,7 @@ onMounted(() => {
           <BaseInput
             id="price"
             label="Product Price"
+            name="price"
             type="number"
             placeholder="Enter price of Product"
             v-model="formData.price"
@@ -81,13 +89,7 @@ onMounted(() => {
         </div>
 
         <div class="input_group">
-          <TextArea
-            name="description"
-            id="description"
-            label="Product Description"
-            placeholder="Enter description of Product"
-            v-model="formData.description"
-          />
+          <TextArea name="description" id="description" label="Product Description" v-model="formData.description" />
         </div>
 
         <div class="input_group">
