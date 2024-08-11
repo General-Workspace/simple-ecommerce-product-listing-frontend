@@ -9,6 +9,19 @@ const productStore = useProductStore();
 const searchQuery = ref("");
 const filteredProducts = ref([]);
 
+// watch(searchQuery, (query) => {
+//   handleSearch(query);
+// });
+
+watch(
+  () => productStore.products,
+  (newProducts) => {
+    if (!searchQuery.value) {
+      filteredProducts.value = newProducts;
+    }
+  }
+);
+
 const products = computed(() => productStore.products);
 // const products = computed(() => {
 //   return productStore.searchResults.length > 0 ? productStore.searchResults : productStore.products;
@@ -20,14 +33,19 @@ const handleSearch = async (query) => {
     filteredProducts.value = products.value;
     // await productStore.fetchProducts();
   } else {
-    await productStore.productSearch(query);
-    filteredProducts.value = productStore.searchResults;
+    // await productStore.productSearch(query);
+    // filteredProducts.value = productStore.searchResults;
+    filteredProducts.value = products.value.filter((product) => {
+      return product.name.toLowerCase().includes(query.toLowerCase());
+    });
   }
 };
 
 onMounted(() => {
-  productStore.fetchProducts();
-  filteredProducts.value = products.value;
+  productStore.fetchProducts().then(() => {
+    filteredProducts.value = products.value;
+  });
+  // filteredProducts.value = products.value;
 });
 </script>
 
