@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, computed, ref } from "vue";
+import { onMounted, computed, ref, watch } from "vue";
 import { useProductStore } from "@/stores/productStore";
 
 import TheHeader from "@/components/layout/TheHeader.vue";
