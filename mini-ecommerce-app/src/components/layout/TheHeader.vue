@@ -1,9 +1,20 @@
-<script setup></script>
+<script setup>
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const logout = () => {
+  authStore.logout();
+  router.push("{ name: 'login' }");
+};
+</script>
 
 <template>
   <header>
     <nav>
-      <router-link to="/" class="logo">Mini Ecommerce</router-link>
+      <router-link to="/" class="logo">Mini <span>Ecommerce</span></router-link>
       <ul>
         <li>
           <router-link to="/products">Products</router-link>
@@ -12,6 +23,7 @@
           <router-link to="/add-product">Add Product</router-link>
         </li>
       </ul>
+      <button @click="logout">Logout</button>
     </nav>
   </header>
 </template>
@@ -36,6 +48,11 @@ nav {
   text-decoration: none;
 }
 
+.logo span {
+  display: inline-block;
+  color: #f39c12;
+}
+
 ul {
   display: flex;
   list-style: none;
@@ -45,12 +62,21 @@ li {
   margin-left: 1rem;
 }
 
-a {
+ul a {
   color: #fff;
   text-decoration: none;
 }
 
-a:hover {
+ul a:hover {
   text-decoration: underline;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #f39c12;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
