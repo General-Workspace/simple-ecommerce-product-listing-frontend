@@ -7,7 +7,7 @@ const router = useRouter();
 
 const logout = () => {
   authStore.logout();
-  router.push("{ name: 'login' }");
+  router.push({ name: "login" });
 };
 </script>
 
