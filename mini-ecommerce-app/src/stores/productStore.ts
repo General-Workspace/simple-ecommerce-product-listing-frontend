@@ -12,6 +12,7 @@ interface IProduct {
 export const useProductStore = defineStore("product", () => {
   const products = ref<IProduct[]>([]);
   const product = ref<IProduct | null>(null);
+  const searchResults = ref<IProduct[]>([]);
   const loading = ref(false);
   const errorMessage = ref<string | null>(null);
   const statusCode = ref<number | null>(null);
@@ -141,9 +142,39 @@ export const useProductStore = defineStore("product", () => {
     }
   };
 
+  const productSearch = async (search: string) => {
+    loading.value = true;
+    //?q=${search}
+
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/products/search`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        params: {
+          q: search,
+        },
+        // paramsSerializer: (params) => {
+        //   return Object.entries(params)
+        //     .map(([key, value]) => `${key}=${value}`)
+        //     .join("&");
+        // },
+      });
+
+      searchResults.value = response.data.data;
+    } catch (error: any) {
+      if (error.response.status === 422) {
+        errorMessage.value = "Validation error. Please check your inputs.";
+      } else {
+        errorMessage.value = error.response.data.message;
+      }
+    }
+  };
+
   return {
     products,
     product,
+    searchResults,
     loading,
     errorMessage,
     statusCode,
@@ -152,5 +183,6 @@ export const useProductStore = defineStore("product", () => {
     fetchProduct,
     deleteProduct,
     updateProduct,
+    productSearch,
   };
 });

@@ -1,23 +1,44 @@
 <script setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { useProductStore } from "@/stores/productStore";
 
 import TheHeader from "@/components/layout/TheHeader.vue";
+import SearchBar from "@/components/layout/SearchBar.vue";
 
 const productStore = useProductStore();
+const searchQuery = ref("");
+const filteredProducts = ref([]);
 
 const products = computed(() => productStore.products);
+// const products = computed(() => {
+//   return productStore.searchResults.length > 0 ? productStore.searchResults : productStore.products;
+// });
+
+const handleSearch = async (query) => {
+  searchQuery.value = query;
+  if (query === "") {
+    filteredProducts.value = products.value;
+    // await productStore.fetchProducts();
+  } else {
+    await productStore.productSearch(query);
+    filteredProducts.value = productStore.searchResults;
+  }
+};
 
 onMounted(() => {
   productStore.fetchProducts();
+  filteredProducts.value = products.value;
 });
 </script>
 
 <template>
   <TheHeader />
+  <div class="search-bar">
+    <SearchBar @search="handleSearch" />
+  </div>
   <div class="main">
-    <div v-if="products" class="products">
-      <div v-for="product in products" :key="product.id" class="product">
+    <div v-if="filteredProducts.length" class="products">
+      <div v-for="product in filteredProducts" :key="product.id" class="product">
         <img :src="product.imageURL" :alt="product.name" />
         <div class="product-info">
           <h3>{{ product.name }}</h3>
@@ -29,6 +50,10 @@ onMounted(() => {
         </p>
         <router-link :to="{ name: 'product', params: { id: product._id } }">Read More</router-link>
       </div>
+    </div>
+
+    <div v-else>
+      <p>No products found</p>
     </div>
   </div>
 </template>
