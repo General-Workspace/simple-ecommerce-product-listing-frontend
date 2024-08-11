@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useProductStore } from "@/stores/productStore";
-import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
 
 import TheHeader from "@/components/layout/TheHeader.vue";
@@ -12,10 +11,7 @@ import ImageInput from "@/components/form/ImageInput.vue";
 import BaseButton from "@/components/form/BaseButton.vue";
 
 const productStore = useProductStore();
-const authStore = useAuthStore();
 const router = useRouter();
-
-productStore.loadProductFromStorage();
 
 const product = computed(() => productStore.product);
 
@@ -38,14 +34,6 @@ const editProduct = async () => {
 
 const processing = computed(() => {
   return productStore.loading ? "Processing..." : "Edit Product";
-});
-
-onMounted(() => {
-  authStore.loadTokenFromStorage();
-
-  if (!authStore.isLoggedIn) {
-    router.push({ name: "login" });
-  }
 });
 </script>
 

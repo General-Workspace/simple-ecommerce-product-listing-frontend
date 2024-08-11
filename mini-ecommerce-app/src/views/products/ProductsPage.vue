@@ -1,24 +1,14 @@
 <script setup>
 import { onMounted, computed } from "vue";
 import { useProductStore } from "@/stores/productStore";
-import { useAuthStore } from "@/stores/authStore";
-import { useRouter } from "vue-router";
 
 import TheHeader from "@/components/layout/TheHeader.vue";
 
 const productStore = useProductStore();
-const authStore = useAuthStore();
-const router = useRouter();
 
 const products = computed(() => productStore.products);
 
 onMounted(() => {
-  authStore.loadTokenFromStorage();
-
-  if (!authStore.isLoggedIn) {
-    router.push({ name: "login" });
-  }
-
   productStore.fetchProducts();
 });
 </script>
@@ -26,9 +16,9 @@ onMounted(() => {
 <template>
   <TheHeader />
   <div class="main">
-    <div class="products">
+    <div v-if="products" class="products">
       <div v-for="product in products" :key="product.id" class="product">
-        <img :src="product.imageURL" alt="product.name" />
+        <img :src="product.imageURL" :alt="product.name" />
         <div class="product-info">
           <h3>{{ product.name }}</h3>
           <p>Price: ${{ product.price }}</p>

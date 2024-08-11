@@ -27,6 +27,7 @@ export const useProductStore = defineStore("product", () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+
       products.value = response.data.data;
     } catch (error: any) {
       errorMessage.value = error.response.data.message;
@@ -77,10 +78,7 @@ export const useProductStore = defineStore("product", () => {
 
       statusCode.value = response.status;
 
-      const { data } = response.data;
-      if (data) {
-        localStorage.setItem("product", JSON.stringify(data));
-      }
+      product.value = response.data.data;
     } catch (error: any) {
       if (error.response.status === 422) {
         errorMessage.value = "Validation error. Please check your inputs.";
@@ -131,10 +129,7 @@ export const useProductStore = defineStore("product", () => {
       });
       statusCode.value = response.status;
 
-      const { data } = response.data;
-      if (data) {
-        localStorage.setItem("product", JSON.stringify(data));
-      }
+      product.value = response.data.data;
     } catch (error: any) {
       if (error.response.status === 422) {
         errorMessage.value = "Validation error. Please check your inputs.";
@@ -143,14 +138,6 @@ export const useProductStore = defineStore("product", () => {
       }
     } finally {
       loading.value = false;
-    }
-  };
-
-  const loadProductFromStorage = () => {
-    const productFromStorage = localStorage.getItem("product");
-
-    if (productFromStorage) {
-      product.value = JSON.parse(productFromStorage);
     }
   };
 
@@ -165,6 +152,5 @@ export const useProductStore = defineStore("product", () => {
     fetchProduct,
     deleteProduct,
     updateProduct,
-    loadProductFromStorage,
   };
 });

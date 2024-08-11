@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { useProductStore } from "@/stores/productStore";
-import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
 
 import BaseForm from "@/components/form/BaseForm.vue";
@@ -13,7 +12,6 @@ import TheHeader from "@/components/layout/TheHeader.vue";
 import ErrorMessage from "@/components/messages/ErrorMessage.vue";
 
 const productStore = useProductStore();
-const authStore = useAuthStore();
 const router = useRouter();
 
 const formData = ref({
@@ -24,7 +22,6 @@ const formData = ref({
 });
 
 const addProduct = async () => {
-  //console.log(formData.value);
   await productStore.addProduct(formData.value);
 
   if (productStore.statusCode === 201) {
@@ -36,14 +33,6 @@ const addProduct = async () => {
 
 const processing = computed(() => {
   return productStore.loading ? "Processing..." : "Add Product";
-});
-
-onMounted(() => {
-  authStore.loadTokenFromStorage();
-
-  if (!authStore.isLoggedIn) {
-    router.push({ name: "login" });
-  }
 });
 </script>
 
