@@ -79,4 +79,21 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+/* small screens */
+@media (max-width: 600px) {
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  li {
+    margin-left: 0;
+  }
+}
 </style>

@@ -9,10 +9,6 @@ const productStore = useProductStore();
 const searchQuery = ref("");
 const filteredProducts = ref([]);
 
-// watch(searchQuery, (query) => {
-//   handleSearch(query);
-// });
-
 watch(
   () => productStore.products,
   (newProducts) => {
@@ -23,18 +19,12 @@ watch(
 );
 
 const products = computed(() => productStore.products);
-// const products = computed(() => {
-//   return productStore.searchResults.length > 0 ? productStore.searchResults : productStore.products;
-// });
 
 const handleSearch = async (query) => {
   searchQuery.value = query;
   if (query === "") {
     filteredProducts.value = products.value;
-    // await productStore.fetchProducts();
   } else {
-    // await productStore.productSearch(query);
-    // filteredProducts.value = productStore.searchResults;
     filteredProducts.value = products.value.filter((product) => {
       return product.name.toLowerCase().includes(query.toLowerCase());
     });
@@ -45,7 +35,6 @@ onMounted(() => {
   productStore.fetchProducts().then(() => {
     filteredProducts.value = products.value;
   });
-  // filteredProducts.value = products.value;
 });
 </script>
 
@@ -87,7 +76,6 @@ onMounted(() => {
 
 .products {
   display: grid;
-  /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
@@ -112,15 +100,6 @@ onMounted(() => {
   margin-top: 0.5rem;
 }
 
-.btn {
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-bottom: 0.31rem;
-}
-
 a {
   text-decoration: none;
   color: #e2d8d8;
@@ -142,5 +121,29 @@ a {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+}
+
+/* small screens */
+@media (max-width: 600px) {
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .product img {
+    height: 150px;
+  }
+
+  .product {
+    padding: 10px;
+  }
+
+  .desc {
+    font-size: 0.8rem;
+  }
+
+  a {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+  }
 }
 </style>

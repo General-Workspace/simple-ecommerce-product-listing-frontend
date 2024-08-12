@@ -111,4 +111,19 @@ span {
   font-size: 0.9rem;
   margin-left: 0.5rem;
 }
+
+/* small screens */
+@media (max-width: 600px) {
+  fieldset {
+    width: 90%;
+  }
+
+  legend {
+    font-size: 1rem;
+  }
+
+  span {
+    font-size: 0.8rem;
+  }
+}
 </style>

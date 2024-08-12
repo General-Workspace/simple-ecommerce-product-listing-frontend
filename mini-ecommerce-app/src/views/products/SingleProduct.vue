@@ -50,12 +50,12 @@ onMounted(() => {
   <div class="main">
     <div v-if="product" class="product">
       <img :src="product.imageURL" :alt="product.name" />
-      <div class="product-info">
+      <div class="product-info border-t-2 pt-2">
         <h3>{{ product.name }}</h3>
         <p>Price: ${{ product.price }}</p>
       </div>
 
-      <p className="border-t-2 pt-2">{{ product.description }}</p>
+      <p>{{ product.description }}</p>
     </div>
 
     <div class="btns" v-if="createdBy === authStore.user.id">
@@ -124,5 +124,31 @@ button:hover {
 .btns {
   display: flex;
   gap: 1rem;
+}
+
+/* small screens */
+@media (max-width: 600px) {
+  .product img {
+    height: 200px;
+  }
+
+  .product {
+    padding: 10px;
+  }
+
+  .btns {
+    gap: 0.5rem;
+  }
+
+  button,
+  a {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.83rem;
+  }
+
+  .product > p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
 }
 </style>

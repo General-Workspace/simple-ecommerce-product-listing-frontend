@@ -75,7 +75,7 @@ const processing = computed(() => {
           />
         </div>
         <BaseButton type="submit" :label="processing" :disabled="authStore.loading || dataInput"></BaseButton>
-        <span class="ml-2"
+        <span class="ml-2 sm:ml-0"
           >Already have an account? <router-link class="text-green-500" to="/login">Login</router-link></span
         >
       </fieldset>
@@ -110,5 +110,28 @@ legend {
 
 .input_group {
   margin-bottom: 1rem;
+}
+
+/* small screens */
+@media (max-width: 600px) {
+  fieldset {
+    width: 90%;
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  .input_group {
+    margin-bottom: 0.5rem;
+  }
+
+  legend {
+    font-size: 1rem;
+  }
+
+  span {
+    font-size: 0.8rem;
+  }
 }
 </style>

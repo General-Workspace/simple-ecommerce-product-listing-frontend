@@ -120,4 +120,19 @@ legend {
   margin-bottom: 1rem;
   padding: 0 1rem;
 }
+
+/* small screens */
+@media (max-width: 600px) {
+  fieldset {
+    width: 90%;
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  input {
+    height: 2rem;
+  }
+}
 </style>

@@ -119,4 +119,15 @@ legend {
   margin-bottom: 1rem;
   padding: 0 1rem;
 }
+
+/* small screens */
+@media (max-width: 600px) {
+  fieldset {
+    width: 90%;
+  }
+
+  .input_group {
+    margin-bottom: 0.5rem;
+  }
+}
 </style>

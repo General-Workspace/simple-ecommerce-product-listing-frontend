@@ -5,7 +5,7 @@
     <p>Welcome to this Mini-Ecommerce App</p>
     <div>
       <p>
-        Hava an account?
+        Have an account?
         <router-link :to="{ name: 'login' }">Login</router-link>
       </p>
       <p>
@@ -41,5 +41,18 @@ a {
 }
 a:hover {
   text-decoration: underline;
+}
+
+/* small screens */
+@media (max-width: 600px) {
+  .main > p {
+    font-size: 1.3rem;
+  }
+
+  div {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>
