@@ -46,7 +46,7 @@ a:hover {
 /* small screens */
 @media (max-width: 600px) {
   .main > p {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 
   div {
