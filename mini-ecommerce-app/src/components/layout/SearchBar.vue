@@ -42,4 +42,19 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+/* small screens */
+@media (max-width: 600px) {
+  .search-bar {
+    width: 90%;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  button {
+    padding: 10px;
+  }
+}
 </style>
