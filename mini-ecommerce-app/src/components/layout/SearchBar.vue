@@ -47,6 +47,7 @@ button {
 @media (max-width: 600px) {
   .search-bar {
     width: 90%;
+    margin: 20px auto;
   }
 
   input {
